@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SoulDesk</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="./soul.ico" type="image/x-icon">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            min-height: 100vh;
+            padding: 15px;
+            color: #333;
+        }
+        
+        .container {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            padding: 25px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 0 10px;
+        }
+        
+        h1 {
+            color: white;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .subtitle {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        
+        .connection-status {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .status-label {
+            color: white;
+            font-size: 1rem;
+        }
+        
+        .status-value {
+            font-weight: bold;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .connected {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .disconnected {
+            background: #f44336;
+            color: white;
+        }
+        
+        .unknown {
+            background: #9e9e9e;
+            color: white;
+        }
+        
+        .control-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 18px;
+            padding: 25px 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:active {
+            transform: scale(0.98);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(0, 0, 0, 0.08);
+        }
+        
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            box-shadow: 0 5px 15px rgba(26, 42, 108, 0.3);
+        }
+        
+        .card-icon i {
+            font-size: 24px;
+            color: white;
+        }
+        
+        .card-title {
+            font-size: 1.4rem;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .status-section {
+            margin-bottom: 20px;
+        }
+        
+        .status-title {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 12px;
+            font-weight: 500;
+            padding-left: 5px;
+        }
+        
+        .status-indicator {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 12px 15px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .status-indicator .status-label {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #444;
+        }
+        
+        .status-indicator .status-value {
+            font-size: 0.95rem;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 8px;
+        }
+        
+        .status-value.active {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .status-value.inactive {
+            background: #f44336;
+            color: white;
+        }
+        
+        .status-value.unknown {
+            background: #9e9e9e;
+            color: white;
+        }
+        
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        
+        .control-btn {
+            padding: 16px 10px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            min-height: 55px;
+            touch-action: manipulation;
+        }
+        
+        .control-btn i {
+            margin-right: 8px;
+            font-size: 1.1rem;
+        }
+        
+        .control-btn.primary {
+            background: linear-gradient(to right, #1a2a6c, #3f5efb);
+            color: white;
+        }
+        
+        .control-btn.secondary {
+            background: #f8f9fa;
+            color: #555;
+            border: 1px solid #ddd;
+        }
+        
+        .control-btn:active {
+            transform: scale(0.95);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .volume-controls {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+            padding: 0 5px;
+        }
+        
+        .volume-slider {
+            flex: 1;
+            height: 8px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #e0e0e0;
+            border-radius: 10px;
+            outline: none;
+            margin: 0 12px;
+        }
+        
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #1a2a6c;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .volume-icon {
+            font-size: 1.3rem;
+            color: #555;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.85rem;
+            padding: 0 10px;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            font-weight: 500;
+            transform: translateX(120%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            max-width: 80%;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        /* PC信息区域样式 */
+        .pc-info {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            color: white;
+        }
+        
+        .pc-id {
+            font-weight: bold;
+            color: #4CAF50;
+            margin-bottom: 8px;
+            word-break: break-all;
+            font-size: 0.95rem;
+        }
+        
+        .pc-status {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .status-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+        }
+        
+        /* 连接按钮特殊处理 */
+        #connect-btn {
+            margin-top: 10px;
+            width: 100%;
+        }
+        
+        /* 防止页面被放大缩小 */
+        html {
+            touch-action: pan-x pan-y;
+            -ms-touch-action: pan-x pan-y;
+        }
+    </style>
+</head>
+<body>
+    <div class="notification" id="notification">指令已发送到服务器</div>
+    
+    <div class="container">
+        <header>
+            <h1>手机远程控制电脑</h1>
+            <p class="subtitle">通过云端服务器远程控制您的电脑，实现锁屏、音量控制等功能</p>
+        </header>
+        
+        <div class="connection-status">
+            <span class="status-label">服务器连接状态:</span>
+            <span class="status-value disconnected" id="server-status">未连接</span>
+            <button class="control-btn primary" id="connect-btn">
+                <i class="fas fa-plug"></i> 连接服务器
+            </button>
+        </div>
+        
+        <!-- PC信息区域 -->
+        <div class="pc-info" id="pc-info" style="display:none;">
+            <div class="pc-id">PC ID: <span id="pc-id-value"></span></div>
+            <div class="pc-status">
+                <div class="status-badge">状态: <span id="pc-status-value">在线</span></div>
+                <div class="status-badge">最后更新: <span id="last-update">刚刚</span></div>
+            </div>
+        </div>
+        
+        <div class="control-panel">
+            <!-- 电脑状态卡片 -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-laptop"></i>
+                    </div>
+                    <h2 class="card-title">电脑状态</h2>
+                </div>
+                
+                <div class="status-section">
+                    <h3 class="status-title">当前状态</h3>
+                    <div class="status-indicator">
+                        <span class="status-label">锁屏状态:</span>
+                        <span class="status-value unknown" id="lock-status">未知</span>
+                    </div>
+                    <div class="status-indicator">
+                        <span class="status-label">系统状态:</span>
+                        <span class="status-value unknown" id="system-status">未知</span>
+                    </div>
+                </div>
+                
+                <div class="controls">
+                    <button class="control-btn primary" id="lock-btn">
+                        <i class="fas fa-lock"></i> 锁屏
+                    </button>
+                    <button class="control-btn secondary" id="shutdown-btn">
+                        <i class="fas fa-power-off"></i> 关机
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 音量状态卡片 -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-volume-up"></i>
+                    </div>
+                    <h2 class="card-title">音量控制</h2>
+                </div>
+                
+                <div class="status-section">
+                    <h3 class="status-title">当前状态</h3>
+                    <div class="status-indicator">
+                        <span class="status-label">音量状态:</span>
+                        <span class="status-value unknown" id="volume-status">未知</span>
+                    </div>
+                    <div class="status-indicator">
+                        <span class="status-label">音量级别:</span>
+                        <span class="status-value unknown" id="volume-level">未知</span>
+                    </div>
+                </div>
+                
+                <div class="controls">
+                    <button class="control-btn primary" id="mute-btn">
+                        <i class="fas fa-volume-mute"></i> 静音
+                    </button>
+                    <button class="control-btn secondary" id="unmute-btn">
+                        <i class="fas fa-volume-up"></i> 取消
+                    </button>
+                </div>
+                
+                <div class="volume-controls">
+                    <i class="fas fa-volume-down volume-icon"></i>
+                    <input type="range" min="0" max="100" value="0" class="volume-slider" id="volume-slider">
+                    <i class="fas fa-volume-up volume-icon"></i>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>远程电脑控制系统 © 2023 | 安全连接</p>
+        </div>
+    </div>
+
+    <script>
+        // 获取DOM元素
+        const lockStatus = document.getElementById('lock-status');
+        const volumeStatus = document.getElementById('volume-status');
+        const volumeLevel = document.getElementById('volume-level');
+        const systemStatus = document.getElementById('system-status');
+        const serverStatus = document.getElementById('server-status');
+        const pcInfo = document.getElementById('pc-info');
+        const pcIdValue = document.getElementById('pc-id-value');
+        const pcStatusValue = document.getElementById('pc-status-value');
+        const lastUpdate = document.getElementById('last-update');
+        
+        const lockBtn = document.getElementById('lock-btn');
+        const shutdownBtn = document.getElementById('shutdown-btn');
+        const muteBtn = document.getElementById('mute-btn');
+        const unmuteBtn = document.getElementById('unmute-btn');
+        const volumeSlider = document.getElementById('volume-slider');
+        const connectBtn = document.getElementById('connect-btn');
+        const notification = document.getElementById('notification');
+        
+        // WebSocket连接
+        let ws;
+        let clientId = 'mobile_soul';
+        let connectedPcId = null;
+        let lastUpdateTime = null;
+        let isPcOnline = false;
+        
+        // 新增变量：用于跟踪锁屏状态和忽略第一次解锁状态
+        let isLockCommandSent = false;
+        let shouldIgnoreFirstUnlock = false;
+        
+        // 显示通知
+        function showNotification(message) {
+            notification.textContent = message;
+            notification.classList.add('show');
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // 更新最后更新时间显示
+        function updateTimeDisplay() {
+            if (!lastUpdateTime) return;
+            
+            const now = new Date();
+            const diff = Math.floor((now - lastUpdateTime) / 1000); // 秒
+            
+            if (diff < 10) {
+                lastUpdate.textContent = '刚刚';
+            } else if (diff < 60) {
+                lastUpdate.textContent = `${diff}秒前`;
+            } else {
+                const minutes = Math.floor(diff / 60);
+                lastUpdate.textContent = `${minutes}分钟前`;
+            }
+            
+            // 每10秒更新一次显示
+            setTimeout(updateTimeDisplay, 10000);
+        }
+        
+        // 重置所有状态为未知
+        function resetAllStatus() {
+            lockStatus.textContent = '未知';
+            lockStatus.className = 'status-value unknown';
+            
+            systemStatus.textContent = '未知';
+            systemStatus.className = 'status-value unknown';
+            
+            volumeStatus.textContent = '未知';
+            volumeStatus.className = 'status-value unknown';
+            
+            volumeLevel.textContent = '未知';
+            volumeLevel.className = 'status-value unknown';
+            
+            volumeSlider.value = 0;
+            
+            // 重置锁屏状态跟踪
+            isLockCommandSent = false;
+            shouldIgnoreFirstUnlock = false;
+        }
+        
+        // 连接服务器
+        connectBtn.addEventListener('click', () => {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.close();
+                serverStatus.textContent = '未连接';
+                serverStatus.className = 'status-value disconnected';
+                connectBtn.innerHTML = '<i class="fas fa-plug"></i> 连接服务器';
+                showNotification('已断开与服务器的连接');
+                pcInfo.style.display = 'none';
+                connectedPcId = null;
+                isPcOnline = false;
+                resetAllStatus();
+            } else {
+                try {
+                    ws = new WebSocket('ws://your.server.ip:8823');
+                    
+                    ws.onopen = function() {
+                        serverStatus.textContent = '已连接';
+                        serverStatus.className = 'status-value connected';
+                        connectBtn.innerHTML = '<i class="fas fa-plug"></i> 断开连接';
+                        showNotification('成功连接到云服务器');
+                        
+                        // 发送客户端ID
+                        ws.send(JSON.stringify({type: 'register', client: 'mobile', id: clientId}));
+                    };
+                    
+                    ws.onmessage = function(event) {
+                        const data = JSON.parse(event.data);
+                        console.log('收到服务器消息:', data);
+                        
+                        if (data.type === 'status_update') {
+                            // 更新PC状态
+                            connectedPcId = data.pc_id;
+                            pcInfo.style.display = 'block';
+                            pcIdValue.textContent = data.pc_id;
+                            
+                            // 标记PC在线状态
+                            isPcOnline = data.status.online;
+                            
+                            // 更新状态显示
+                            const status = data.status;
+                            
+                            if (isPcOnline) {
+                                pcStatusValue.textContent = '在线';
+                                
+                                // 更新音量状态
+                                volumeSlider.value = status.volume || 0;
+                                volumeLevel.textContent = `${status.volume || 0}%`;
+                                volumeLevel.className = 'status-value active';
+                                
+                                if (status.mute) {
+                                    volumeStatus.textContent = '静音';
+                                    volumeStatus.className = 'status-value inactive';
+                                } else {
+                                    volumeStatus.textContent = '未静音';
+                                    volumeStatus.className = 'status-value active';
+                                }
+                                
+                                // 更新锁屏状态 - 解决忽略第一次解锁状态的问题
+                                if (status.lock === 'locked') {
+                                    lockStatus.textContent = '锁屏';
+                                    lockStatus.className = 'status-value active';
+                                    
+                                    // 重置忽略标志
+                                    shouldIgnoreFirstUnlock = false;
+                                } else if (status.lock === 'unlocked') {
+                                    // 如果锁屏指令刚发送，则忽略第一次解锁状态
+                                    if (isLockCommandSent && shouldIgnoreFirstUnlock) {
+                                        console.log("忽略第一次解锁状态");
+                                        shouldIgnoreFirstUnlock = false;
+                                    } else {
+                                        lockStatus.textContent = '未锁屏';
+                                        lockStatus.className = 'status-value inactive';
+                                    }
+                                }
+                                
+                                // 系统状态：在线
+                                systemStatus.textContent = '在线';
+                                systemStatus.className = 'status-value active';
+                            } else {
+                                pcStatusValue.textContent = '离线';
+                                resetAllStatus();
+                            }
+                            
+                            // 更新最后更新时间
+                            lastUpdateTime = new Date();
+                            updateTimeDisplay();
+                        } 
+                        else if (data.type === 'status') {
+                            // 指令响应
+                            showNotification(`指令执行: ${data.message || '成功'}`);
+                            
+                            // 锁屏成功后的处理
+                            if (data.command === 'lock_screen' && data.success) {
+                                // 更新锁屏状态
+                                lockStatus.textContent = '锁屏';
+                                lockStatus.className = 'status-value active';
+                                
+                                // 设置标志，准备忽略第一次解锁状态
+                                isLockCommandSent = true;
+                                shouldIgnoreFirstUnlock = true;
+                            }
+                        } 
+                        else if (data.type === 'error') {
+                            showNotification(`错误: ${data.message}`);
+                            
+                            // 如果锁屏失败，重置标志
+                            if (data.command === 'lock_screen') {
+                                isLockCommandSent = false;
+                                shouldIgnoreFirstUnlock = false;
+                            }
+                        }
+                    };
+                    
+                    ws.onclose = function() {
+                        serverStatus.textContent = '未连接';
+                        serverStatus.className = 'status-value disconnected';
+                        connectBtn.innerHTML = '<i class="fas fa-plug"></i> 连接服务器';
+                        showNotification('与服务器的连接已断开');
+                        pcInfo.style.display = 'none';
+                        connectedPcId = null;
+                        isPcOnline = false;
+                        resetAllStatus();
+                    };
+                    
+                    ws.onerror = function(error) {
+                        console.error('WebSocket错误:', error);
+                        showNotification('连接服务器时出错');
+                    };
+                    
+                } catch (error) {
+                    console.error('连接错误:', error);
+                    showNotification('连接服务器时出错');
+                }
+            }
+        });
+        
+        // 发送指令到服务器
+        function sendCommandToServer(command, data = {}) {
+            if (!ws || ws.readyState !== WebSocket.OPEN) {
+                showNotification('错误：请先连接服务器');
+                return false;
+            }
+            
+            if (!isPcOnline) {
+                showNotification('错误：电脑当前不在线');
+                return false;
+            }
+            
+            const payload = {
+                type: 'command',
+                command: command,
+                clientId: clientId,
+                data: data
+            };
+            
+            ws.send(JSON.stringify(payload));
+            return true;
+        }
+        
+        // 锁屏状态管理
+        lockBtn.addEventListener('click', () => {
+            if (sendCommandToServer('lock_screen')) {
+                showNotification('锁屏指令已发送');
+                
+                // 乐观更新锁屏状态
+                lockStatus.textContent = '锁屏';
+                lockStatus.className = 'status-value active';
+                
+                // 设置标志，准备忽略第一次解锁状态
+                isLockCommandSent = true;
+                shouldIgnoreFirstUnlock = true;
+            }
+        });
+        
+        shutdownBtn.addEventListener('click', () => {
+            if (confirm('确定要远程关闭电脑吗？此操作不可撤销！')) {
+                if (sendCommandToServer('shutdown')) {
+                    showNotification('关机指令已发送');
+                }
+            }
+        });
+        
+        // 音量状态管理
+        muteBtn.addEventListener('click', () => {
+            if (sendCommandToServer('mute')) {
+                showNotification('静音指令已发送');
+            }
+        });
+        
+        unmuteBtn.addEventListener('click', () => {
+            if (sendCommandToServer('unmute')) {
+                showNotification('取消静音指令已发送');
+            }
+        });
+        
+        // 音量滑块控制
+        volumeSlider.addEventListener('input', () => {
+            const volume = volumeSlider.value;
+            volumeLevel.textContent = `${volume}%`;
+            volumeLevel.className = 'status-value active';
+            
+            if (volume > 0 && volumeStatus.textContent === '静音') {
+                volumeStatus.textContent = '未静音';
+                volumeStatus.className = 'status-value active';
+            } else if (volume == 0) {
+                volumeStatus.textContent = '静音';
+                volumeStatus.className = 'status-value inactive';
+            }
+            
+            // 发送音量设置指令
+            if (sendCommandToServer('set_volume', {volume: volume})) {
+                console.log(`音量设置为: ${volume}%`);
+            }
+        });
+        
+        // 初始化页面
+        window.addEventListener('load', () => {
+            resetAllStatus();
+        });
+    </script>
+</body>
+</html>
