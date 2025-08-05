@@ -38,7 +38,7 @@ SoulDesk存在的已知问题：针对检测电脑是否锁屏方面，作者实
 <p align="center">
   <a href="http://ff.soul6.cn/souldesk/" target="_blank">
     <img
-      width="200"
+      width="400"
       src="http://ff.soul6.cn/souldesk/pc.png"
     />
   </a>
@@ -197,6 +197,7 @@ sudo pacman -S xss-lock gnome-screensaver pulseaudio
       alt="SoulDesk logo"
     />
   </a>
+
 ## 联系作者
 
 ### 一、添加QQ
@@ -207,6 +208,7 @@ sudo pacman -S xss-lock gnome-screensaver pulseaudio
       alt="Soul"
     />
   </a>
+
 ### 二、作者博客
   <a href="http://blog.soul6.cn/" target="_blank">
     <p>
