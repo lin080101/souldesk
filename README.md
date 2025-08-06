@@ -223,3 +223,7 @@ sudo pacman -S xss-lock gnome-screensaver pulseaudio
 ## 愿景
 
 各大远程软件虽然免费都能用，但免费版的功能覆盖不够全面。准确来说，作者想用的功能，暂且没有或者要money。所以爆肝开发此项目，程序是能正常运行，但有点幼稚...,没办法作者比较没有实力。望各位有实力的大佬可以一起改进和完善。谢谢大家的理解和支持！
+
+## 如果下载太慢，换个平台
+[蓝奏云](https://wwyx.lanzout.com/iy4sh32sismh)
+
