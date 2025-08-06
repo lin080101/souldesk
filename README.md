@@ -38,7 +38,7 @@ SoulDesk存在的已知问题：针对检测电脑是否锁屏方面，作者实
 <p align="center">
   <a href="http://ff.soul6.cn/souldesk/" target="_blank">
     <img
-      width="400"
+      width="600"
       src="http://ff.soul6.cn/souldesk/pc.png"
     />
   </a>
