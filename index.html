@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SoulDesk</title>
+    <title>SoulDesk - 远程控制中心</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" href="./soul.ico" type="image/x-icon">
     <style>
@@ -19,15 +19,18 @@
             min-height: 100vh;
             padding: 15px;
             color: #333;
+            line-height: 1.6;
         }
         
         .container {
             width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             border-radius: 20px;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-            padding: 25px 15px;
+            padding: 25px;
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
         
@@ -60,7 +63,7 @@
             align-items: center;
             justify-content: center;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 15px;
         }
         
         .status-label {
@@ -99,9 +102,14 @@
         .card {
             background: rgba(255, 255, 255, 0.95);
             border-radius: 18px;
-            padding: 25px 15px;
+            padding: 25px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
         }
         
         .card:active {
@@ -229,6 +237,11 @@
             border: 1px solid #ddd;
         }
         
+        .control-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        
         .control-btn:active {
             transform: scale(0.95);
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -261,6 +274,11 @@
             background: #1a2a6c;
             cursor: pointer;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: all 0.15s ease;
+        }
+        
+        .volume-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
         }
         
         .volume-icon {
@@ -289,6 +307,7 @@
             transition: transform 0.3s ease;
             z-index: 1000;
             max-width: 80%;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
         
         .notification.show {
@@ -336,6 +355,89 @@
             touch-action: pan-x pan-y;
             -ms-touch-action: pan-x pan-y;
         }
+        
+        /* 桌面端响应式样式 */
+        @media (min-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .control-panel {
+                flex-direction: row;
+                gap: 30px;
+            }
+            
+            .card {
+                flex: 1;
+                min-width: 300px;
+            }
+            
+            .card-title {
+                font-size: 1.6rem;
+            }
+            
+            .status-label, .status-value {
+                font-size: 1.05rem;
+            }
+            
+            .control-btn {
+                padding: 18px 10px;
+                font-size: 1.05rem;
+            }
+            
+            .connection-status {
+                padding: 20px;
+            }
+            
+            #connect-btn {
+                width: auto;
+                padding: 8px 25px;
+                margin-top: 0;
+            }
+            
+            .pc-info {
+                padding: 20px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            .pc-id {
+                margin-bottom: 0;
+                font-size: 1rem;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .container {
+                padding: 40px;
+            }
+            
+            .card {
+                padding: 30px;
+            }
+            
+            .card-icon {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .card-icon i {
+                font-size: 28px;
+            }
+            
+            .status-indicator {
+                padding: 15px 20px;
+            }
+            
+            .controls {
+                gap: 15px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -343,7 +445,7 @@
     
     <div class="container">
         <header>
-            <h1>手机远程控制电脑</h1>
+            <h1>远程电脑控制中心</h1>
             <p class="subtitle">通过云端服务器远程控制您的电脑，实现锁屏、音量控制等功能</p>
         </header>
         
@@ -435,7 +537,7 @@
         </div>
         
         <div class="footer">
-            <p>远程电脑控制系统 © 2023 | 安全连接</p>
+            <p>远程电脑控制系统 © 2025 | SoulDesk</p>
         </div>
     </div>
 
@@ -534,7 +636,7 @@
                 resetAllStatus();
             } else {
                 try {
-                    ws = new WebSocket('ws://your.server.ip:8823');
+                    ws = new WebSocket('ws://111.231.78.35:8823');
                     
                     ws.onopen = function() {
                         serverStatus.textContent = '已连接';
